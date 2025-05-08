@@ -2,65 +2,85 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Requisição de Materiais Escolares</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Requisição de Material Escolar</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Portal Escolar</h1>
-    <nav>
-      <ul>
-        <li><a href="#formulario">Requisitar</a></li>
-        <li><a href="#materiais">Materiais</a></li>
-        <li><a href="#contato">Contato</a></li>
-      </ul>
-    </nav>
-  </header>
+  <h1>Requisição de Material Escolar</h1>
+  <nav>
+    <a onclick="showSection('home')">Início</a>
+    <a onclick="showSection('cadastrar')">Cadastrar Material</a>
+    <a onclick="showSection('listar')">Lista de Materiais</a>
+    <a onclick="showSection('solicitar')">Solicitar Material</a>
+    <a onclick="showSection('historico')">Histórico</a>
+  </nav>
 
-  <main>
-    <section class="intro">
-      <h2>Solicite seus Materiais com Facilidade</h2>
-      <p>Nosso portal permite que você envie requisições de material escolar rapidamente.</p>
-    </section>
+  <!-- Início -->
+  <section id="home" class="active">
+    <h2>Bem-vindo!</h2>
+    <p>Use o menu acima para navegar entre as funções do sistema.</p>
+  </section>
 
-    <section id="formulario">
-      <h2>Formulário de Requisição</h2>
-      <form id="requisicaoForm">
-        <label for="nome">Seu nome:</label>
-        <input type="text" id="nome" required />
+  <!-- Cadastrar Material -->
+  <section id="cadastrar">
+    <h2>Cadastrar Novo Material</h2>
+    <form id="formMaterial">
+      <input type="text" id="nomeMaterial" placeholder="Nome do material" required />
+      <select id="tipoMaterial" required>
+        <option value=\"\">Selecione o tipo</option>
+        <option value=\"papelaria\">Papelaria</option>
+        <option value=\"escrita\">Escrita</option>
+        <option value=\"arte\">Arte</option>
+        <option value=\"tecnologia\">Tecnologia</option>
+      </select>
+      <input type="number" id="quantidadeMaterial" placeholder="Quantidade" required />
+      <button type="submit">Cadastrar</button>
+    </form>
+  </section>
 
-        <label for="turma">Turma:</label>
-        <input type="text" id="turma" required />
+  <!-- Lista de Materiais -->
+  <section id="listar">
+    <h2>Materiais Cadastrados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Tipo</th>
+          <th>Quantidade</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaMateriais"></tbody>
+    </table>
+  </section>
 
-        <label for="material">Material desejado:</label>
-        <select id="material" required>
-          <option value="">Selecione</option>
-          <option value="Caderno">Caderno</option>
-          <option value="Caneta">Caneta</option>
-          <option value="Lápis">Lápis</option>
-        </select>
+  <!-- Solicitar Material -->
+  <section id="solicitar">
+    <h2>Solicitar Material</h2>
+    <form id="formSolicitacao">
+      <select id="selectMaterial" required></select>
+      <input type="date" id="dataSolicitacao" required />
+      <input type="number" id="quantidadeSolicitada" placeholder="Quantidade solicitada" />
+      <textarea id="obsSolicitacao" placeholder="Observações"></textarea>
+      <button type="submit">Solicitar</button>
+    </form>
+  </section>
 
-        <button type="submit">Enviar Requisição</button>
-      </form>
-      <div id="mensagem"></div>
-    </section>
-
-    <section id="materiais">
-      <h2>Materiais Disponíveis</h2>
-      <ul>
-        <li>Cadernos</li>
-        <li>Canetas</li>
-        <li>Lápis</li>
-        <li>Borracha</li>
-        <li>Régua</li>
-      </ul>
-    </section>
-  </main>
-
-  <footer id="contato">
-    <p>&copy; 2025 - Portal Escolar. Todos os direitos reservados.</p>
-  </footer>
+  <!-- Histórico -->
+  <section id="historico">
+    <h2>Histórico de Solicitações</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Material</th>
+          <th>Data</th>
+          <th>Quantidade</th>
+          <th>Observações</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaHistorico"></tbody>
+    </table>
+  </section>
 
   <script src="script.js"></script>
 </body>
