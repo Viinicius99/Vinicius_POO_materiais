@@ -1,12 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Requisição de Materiais Escolares</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    
+  <header>
+    <h1>Portal Escolar</h1>
+    <nav>
+      <ul>
+        <li><a href="#formulario">Requisitar</a></li>
+        <li><a href="#materiais">Materiais</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h2>Solicite seus Materiais com Facilidade</h2>
+      <p>Nosso portal permite que você envie requisições de material escolar rapidamente.</p>
+    </section>
+
+    <section id="formulario">
+      <h2>Formulário de Requisição</h2>
+      <form id="requisicaoForm">
+        <label for="nome">Seu nome:</label>
+        <input type="text" id="nome" required />
+
+        <label for="turma">Turma:</label>
+        <input type="text" id="turma" required />
+
+        <label for="material">Material desejado:</label>
+        <select id="material" required>
+          <option value="">Selecione</option>
+          <option value="Caderno">Caderno</option>
+          <option value="Caneta">Caneta</option>
+          <option value="Lápis">Lápis</option>
+        </select>
+
+        <button type="submit">Enviar Requisição</button>
+      </form>
+      <div id="mensagem"></div>
+    </section>
+
+    <section id="materiais">
+      <h2>Materiais Disponíveis</h2>
+      <ul>
+        <li>Cadernos</li>
+        <li>Canetas</li>
+        <li>Lápis</li>
+        <li>Borracha</li>
+        <li>Régua</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer id="contato">
+    <p>&copy; 2025 - Portal Escolar. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
