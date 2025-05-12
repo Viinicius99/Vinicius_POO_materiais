@@ -1,92 +1,120 @@
-function showSection(id) {
-  document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+const estoque = {
+  "Lápis": 5,
+  "Caderno": 3,
+  "Caneta": 2,
+  "Borracha": 1,
+  "Apontador": 4,
+  "Régua": 3,
+  "Cola": 2,
+  "Tesoura": 2,
+  "Marcador": 3,
+  "Papel A4": 10
+};
+
+const materialSelect = document.getElementById("material");
+const listaEstoque = document.getElementById("listaEstoque");
+const requisicoes = document.getElementById("requisicoes");
+
+// Atualiza o select de materiais
+function atualizarSelect() {
+  materialSelect.innerHTML = "";
+
+  for (const item in estoque) {
+    const option = document.createElement("option");
+    const qtd = estoque[item];
+    option.value = item;
+    option.textContent = `${item} (${qtd})`;
+    if (qtd <= 0) {
+      option.disabled = true;
+      option.classList.add("riscado");
+    }
+    materialSelect.appendChild(option);
+  }
 }
 
-let materiais = [];
-let historico = [];
+// Atualiza a lista de estoque na interface
+function atualizarEstoqueUI() {
+  listaEstoque.innerHTML = "";
 
-document.getElementById("formMaterial").addEventListener("submit", function (e) {
+  for (const item in estoque) {
+    const li = document.createElement("li");
+    li.textContent = `${item}: ${estoque[item]} unidades`;
+
+    if (estoque[item] <= 0) {
+      li.classList.add("riscado");
+      const btn = document.createElement("button");
+      btn.textContent = "Repor";
+      btn.className = "btn";
+      btn.style.marginTop = "5px";
+      btn.onclick = () => {
+        const novaQtd = parseInt(prompt(`Adicionar quantas unidades de ${item}?`));
+        if (!isNaN(novaQtd) && novaQtd > 0) {
+          estoque[item] += novaQtd;
+          atualizarEstoqueUI();
+          atualizarSelect();
+        }
+      };
+      li.appendChild(document.createElement("br"));
+      li.appendChild(btn);
+    }
+
+    listaEstoque.appendChild(li);
+  }
+}
+
+// Enviar requisição
+document.getElementById("requisicaoForm").addEventListener("submit", function (e) {
   e.preventDefault();
+  const nome = document.getElementById("nome").value.trim();
+  const destino = document.getElementById("destino").value.trim();
+  const material = materialSelect.value;
+  const quantidade = parseInt(document.getElementById("quantidade").value);
 
-  const nome = document.getElementById("nomeMaterial").value;
-  const tipo = document.getElementById("tipoMaterial").value;
-  const quantidade = document.getElementById("quantidadeMaterial").value;
+  if (!nome || !destino || !material || isNaN(quantidade) || quantidade < 1) {
+    alert("Preencha todos os campos corretamente.");
+    return;
+  }
 
-  if (!nome || !tipo || !quantidade) return;
+  if (estoque[material] < quantidade) {
+    alert("Estoque insuficiente.");
+    return;
+  }
 
-  const material = { nome, tipo, quantidade };
-  materiais.push(material);
+  estoque[material] -= quantidade;
 
-  atualizarTabelaMateriais();
-  atualizarSelectMateriais();
+  const agora = new Date();
+  const horario = agora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+  const li = document.createElement("li");
+  li.textContent = `${nome} solicitou ${quantidade}x ${material} para ${destino} às ${horario}`;
+  requisicoes.prepend(li);
+
   this.reset();
-  alert("Material cadastrado com sucesso!");
+  atualizarEstoqueUI();
+  atualizarSelect();
 });
 
-function atualizarTabelaMateriais() {
-  const tbody = document.getElementById("tabelaMateriais");
-  tbody.innerHTML = "";
+// Alternar abas
+function mostrarAba(aba) {
+  document.getElementById("aba-requisicao").style.display = aba === "requisicao" ? "block" : "none";
+  document.getElementById("aba-estoque").style.display = aba === "estoque" ? "block" : "none";
 
-  materiais.forEach(m => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${m.nome}</td>
-      <td>${m.tipo}</td>
-      <td>${m.quantidade}</td>
-    `;
-    tbody.appendChild(tr);
+  const links = document.querySelectorAll(".sidebar nav a");
+  links.forEach(link => link.classList.remove("active"));
+  links.forEach(link => {
+    if (link.textContent.toLowerCase().includes(aba)) {
+      link.classList.add("active");
+    }
   });
 }
 
-function atualizarSelectMateriais() {
-  const select = document.getElementById("selectMaterial");
-  select.innerHTML = "";
-  materiais.forEach((m, i) => {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.textContent = `${m.nome} (${m.tipo})`;
-    select.appendChild(opt);
-  });
-}
-
-document.getElementById("formSolicitacao").addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const index = document.getElementById("selectMaterial").value;
-  const data = document.getElementById("dataSolicitacao").value;
-  const quantidade = document.getElementById("quantidadeSolicitada").value;
-  const observacoes = document.getElementById("obsSolicitacao").value;
-
-  if (index === "" || !data) return;
-
-  const material = materiais[index];
-  const registro = {
-    nome: material.nome,
-    tipo: material.tipo,
-    data,
-    quantidade: quantidade || material.quantidade,
-    obs: observacoes
-  };
-
-  historico.push(registro);
-  atualizarHistorico();
-  this.reset();
-  alert("Solicitação registrada com sucesso!");
+// Modo claro/escuro
+const modoToggle = document.getElementById("modoToggle");
+modoToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  modoToggle.textContent = document.body.classList.contains("dark") ? "🌞" : "🌙";
 });
 
-function atualizarHistorico() {
-  const tbody = document.getElementById("tabelaHistorico");
-  tbody.innerHTML = "";
-
-  historico.forEach(h => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${h.nome} (${h.tipo})</td>
-      <td>${h.data}</td>
-      <td>${h.quantidade}</td>
-      <td>${h.obs}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+// Inicialização
+atualizarSelect();
+atualizarEstoqueUI();

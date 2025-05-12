@@ -1,87 +1,116 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Requisição de Material Escolar</title>
+  <title>Portal Escolar - Requisição de Materiais</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    .tela-inicial {
+      position: fixed;
+      inset: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 9999;
+    }
+    .tela-inicial button {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .tela-inicial button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-  <h1>Requisição de Material Escolar</h1>
-  <nav>
-    <a onclick="showSection('home')">Início</a>
-    <a onclick="showSection('cadastrar')">Cadastrar Material</a>
-    <a onclick="showSection('listar')">Lista de Materiais</a>
-    <a onclick="showSection('solicitar')">Solicitar Material</a>
-    <a onclick="showSection('historico')">Histórico</a>
-  </nav>
+  <!-- Tela de início -->
+  <div class="tela-inicial" id="telaInicial">
+    <h1>Bem-vindo ao Portal Escolar</h1>
+    <p>Clique abaixo para iniciar sua requisição.</p>
+    <button onclick="iniciarRequisicao()">Iniciar Requisição</button>
+  </div>
 
-  <!-- Início -->
-  <section id="home" class="active">
-    <h2>Bem-vindo!</h2>
-    <p>Use o menu acima para navegar entre as funções do sistema.</p>
-  </section>
+  <!-- Portal principal -->
+  <div class="app" style="display: none;" id="portalApp">
+    <aside class="sidebar">
+      <h2>📚 Portal Escolar</h2>
+      <nav>
+        <a href="#" class="active" onclick="mostrarAba('requisicao')">Requisição</a>
+        <a href="#" onclick="mostrarAba('estoque')">Estoque</a>
+      </nav>
+    </aside>
 
-  <!-- Cadastrar Material -->
-  <section id="cadastrar">
-    <h2>Cadastrar Novo Material</h2>
-    <form id="formMaterial">
-      <input type="text" id="nomeMaterial" placeholder="Nome do material" required />
-      <select id="tipoMaterial" required>
-        <option value=\"\">Selecione o tipo</option>
-        <option value=\"papelaria\">Papelaria</option>
-        <option value=\"escrita\">Escrita</option>
-        <option value=\"arte\">Arte</option>
-        <option value=\"tecnologia\">Tecnologia</option>
-      </select>
-      <input type="number" id="quantidadeMaterial" placeholder="Quantidade" required />
-      <button type="submit">Cadastrar</button>
-    </form>
-  </section>
+    <main class="main">
+      <header class="topbar">
+        <h1>Requisição de Materiais</h1>
+        <button id="modoToggle" class="modo-toggle">🌙</button>
+      </header>
 
-  <!-- Lista de Materiais -->
-  <section id="listar">
-    <h2>Materiais Cadastrados</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Tipo</th>
-          <th>Quantidade</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaMateriais"></tbody>
-    </table>
-  </section>
+      <section class="form-card aba" id="aba-requisicao">
+        <form id="requisicaoForm">
+          <div class="field-group">
+            <label for="nome">Nome do Solicitante</label>
+            <input type="text" id="nome" placeholder="Digite seu nome" required />
+          </div>
 
-  <!-- Solicitar Material -->
-  <section id="solicitar">
-    <h2>Solicitar Material</h2>
-    <form id="formSolicitacao">
-      <select id="selectMaterial" required></select>
-      <input type="date" id="dataSolicitacao" required />
-      <input type="number" id="quantidadeSolicitada" placeholder="Quantidade solicitada" />
-      <textarea id="obsSolicitacao" placeholder="Observações"></textarea>
-      <button type="submit">Solicitar</button>
-    </form>
-  </section>
+          <div class="field-group">
+            <label for="destino">Destino da Solicitação</label>
+            <input list="destinos" id="destino" placeholder="Ex: Sala 3ºA, Secretaria..." required />
+            <datalist id="destinos">
+              <option value="Sala 1ºA">
+              <option value="Sala 2ºB">
+              <option value="Sala 3ºC">
+              <option value="Coordenação">
+              <option value="Secretaria">
+              <option value="Direção">
+              <option value="Laboratório de Informática">
+              <option value="Biblioteca">
+            </datalist>
+          </div>
 
-  <!-- Histórico -->
-  <section id="historico">
-    <h2>Histórico de Solicitações</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Material</th>
-          <th>Data</th>
-          <th>Quantidade</th>
-          <th>Observações</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaHistorico"></tbody>
-    </table>
-  </section>
+          <div class="field-group">
+            <label for="material">Material</label>
+            <select id="material" required></select>
+          </div>
+
+          <div class="field-group">
+            <label for="quantidade">Quantidade</label>
+            <input type="number" id="quantidade" min="1" required />
+          </div>
+
+          <button type="submit" class="btn">Enviar Requisição</button>
+        </form>
+      </section>
+
+      <section class="lista-requisicoes aba" id="aba-estoque" style="display: none;">
+        <h2>📦 Estoque</h2>
+        <ul id="listaEstoque"></ul>
+      </section>
+
+      <section class="lista-requisicoes">
+        <h2>📋 Requisições Recentes</h2>
+        <ul id="requisicoes"></ul>
+      </section>
+    </main>
+  </div>
 
   <script src="script.js"></script>
+  <script>
+    function iniciarRequisicao() {
+      document.getElementById("telaInicial").style.display = "none";
+      document.getElementById("portalApp").style.display = "flex";
+    }
+  </script>
 </body>
 </html>
+  
